@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Семейная ипотека Альфа-Банк · новые правила с 01.10.2026</title>
+<style>
+  * { box-sizing: border-box; }
+
+  :root{
+    --accent: #6366f1;
+    --accent-dark: #4f46e5;
+    --ok: #10b981;
+    --bad: #ef4444;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+  }
+
+  body{
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    background: linear-gradient(135deg, #eef2ff 0%, #fdf2f8 50%, #ecfeff 100%);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .orb{
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .45;
+    pointer-events: none;
+    z-index: 0;
+    animation: float 14s ease-in-out infinite;
+  }
+  .orb-1{ width: 320px; height: 320px; background: #c7d2fe; top: -90px; left: -80px; }
+  .orb-2{ width: 280px; height: 280px; background: #fbcfe8; bottom: -80px; right: -60px; animation-delay: -5s; }
+  .orb-3{ width: 220px; height: 220px; background: #a5f3fc; top: 45%; right: 12%; animation-delay: -9s; }
+
+  @keyframes float{
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(24px, -30px) scale(1.08); }
+  }
+
+  .wrap{
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 32px 18px 80px;
+  }
+
+  .head{
+    text-align: center;
+    margin-bottom: 24px;
+    animation: rise .6s cubic-bezier(.22,.9,.3,1) both;
+  }
+
+  @keyframes rise{
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .head h1{
+    margin: 0 0 8px;
+    font-size: clamp(19px, 4.2vw, 25px);
+    letter-spacing: -.02em;
+    line-height: 1.3;
+    background: linear-gradient(100deg, #4f46e5, #a855f7 55%, #ec4899);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .q-counter{
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-dark);
+    letter-spacing: .02em;
+  }
+
+  .q-counter span{
+    display: inline-block;
+    min-width: 1.2em;
+    text-align: center;
+  }
+
+  .slide{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px 0;
+    will-change: opacity, transform;
+  }
+
+  .q-card{
+    width: 100%;
+    background: #fff;
+    border: 1px solid rgba(99,102,241,.10);
+    border-radius: 22px;
+    padding: 28px 26px 22px;
+    box-shadow: 0 8px 32px rgba(79,70,229,.09);
+  }
+
+  .q-head{
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .q-num{
+    flex: 0 0 auto;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    box-shadow: 0 4px 12px rgba(99,102,241,.30);
+  }
+
+  .q-text{
+    margin: 4px 0 0;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
+  .options{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .opt{
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .25s ease, background .25s ease,
+                transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s ease;
+  }
+
+  .opt input{
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .opt .letter{
+    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    background: #f3f4f6;
+    transition: background .25s ease, color .25s ease, transform .25s ease;
+  }
+
+  .opt .txt{
+    font-size: 15.5px;
+    line-height: 1.45;
+    padding-top: 3px;
+  }
+
+  .opt:hover:not(.selected){
+    border-color: #c7d2fe;
+    background: #f8faff;
+    transform: translateX(3px);
+  }
+
+  .opt.selected{
+    border-color: var(--accent);
+    background: #eef2ff;
+    box-shadow: 0 0 0 4px rgba(99,102,241,.10);
+  }
+
+  .opt.selected .letter{
+    background: var(--accent);
+    color: #fff;
+    transform: scale(1.08);
+  }
+
+  .nav{
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    margin-top: 26px;
+  }
+
+  .btn{
+    padding: 14px 30px;
+    border: none;
+    border-radius: 14px;
+    font-size: 15.5px;
+    font-weight: 600;
+    font-family: inherit;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    box-shadow: 0 8px 20px rgba(99,102,241,.28);
+    transition: transform .25s cubic-bezier(.4,0,.2,1),
+                box-shadow .25s ease, opacity .25s ease;
+  }
+
+  .btn:hover:not(:disabled){
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px rgba(99,102,241,.36);
+  }
+
+  .btn:active:not(:disabled){ transform: translateY(0) scale(.98); }
+
+  .btn:disabled{
+    opacity: .4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .btn.ghost{
+    background: #fff;
+    color: var(--accent-dark);
+    border: 2px solid #e0e7ff;
+    box-shadow: none;
+  }
+
+  .btn.ghost:hover:not(:disabled){
+    background: #eef2ff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(99,102,241,.16);
+  }
+
+  .progress-bar{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 7px;
+    background: rgba(229, 231, 235, 0.6);
+    z-index: 100;
+    backdrop-filter: blur(4px);
+  }
+
+  .progress-fill{
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #6366f1, #a855f7 50%, #ec4899);
+    background-size: 200% 100%;
+    transition: width .55s cubic-bezier(.4,0,.2,1);
+    animation: shimmer 3s linear infinite;
+    box-shadow: 0 0 14px rgba(168, 85, 247, .45);
+  }
+
+  @keyframes shimmer{
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  .results{
+    width: 100%;
+    background: #fff;
+    border: 1px solid rgba(99,102,241,.10);
+    border-radius: 22px;
+    padding: 32px 26px;
+    box-shadow: 0 8px 32px rgba(79,70,229,.09);
+  }
+
+  .res-top{
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  .ring-wrap{
+    position: relative;
+    width: 140px;
+    height: 140px;
+    flex: 0 0 auto;
+  }
+
+  .ring{ width: 100%; height: 100%; }
+
+  .ring-bg{
+    fill: none;
+    stroke: #eceefb;
+    stroke-width: 11;
+  }
+
+  .ring-fg{
+    fill: none;
+    stroke: url(#grad);
+    stroke-width: 11;
+    stroke-linecap: round;
+    stroke-dasharray: 326.7;
+    stroke-dashoffset: 326.7;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);
+  }
+
+  .ring-label{
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--accent-dark);
+  }
+
+  .res-text{ flex: 1 1 240px; min-width: 220px; }
+
+  .res-text h2{
+    margin: 0 0 6px;
+    font-size: 20px;
+    letter-spacing: -.01em;
+  }
+
+  .verdict{ margin: 0 0 6px; font-size: 15.5px; font-weight: 600; }
+  .verdict.good{ color: var(--ok); }
+  .verdict.mid{ color: #d97706; }
+  .verdict.low{ color: var(--bad); }
+
+  .sub{ margin: 0; font-size: 14px; color: var(--muted); }
+  .sub b{ color: var(--text); }
+
+  .stats{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .stat{
+    padding: 16px 12px;
+    border-radius: 15px;
+    text-align: center;
+    background: #f8fafc;
+    border: 1px solid var(--line);
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+  }
+
+  .stat:hover{ transform: translateY(-3px); }
+
+  .stat-num{
+    display: block;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+  }
+
+  .stat-label{
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  .stat.ok   { background: #ecfdf5; border-color: #bbf7d0; }
+  .stat.ok .stat-num   { color: var(--ok); }
+  .stat.bad  { background: #fef2f2; border-color: #fecaca; }
+  .stat.bad .stat-num  { color: var(--bad); }
+  .stat.skip { background: #f8fafc; }
+  .stat.skip .stat-num { color: var(--muted); }
+
+  .reset-wrap{
+    margin-top: 26px;
+    display: flex;
+    justify-content: center;
+  }
+
+  @media (max-width: 520px){
+    .stat-num{ font-size: 22px; }
+    .res-top{ gap: 18px; }
+    .ring-wrap{ width: 110px; height: 110px; margin: 0 auto; }
+    .ring-label{ font-size: 22px; }
+    .q-card{ padding: 22px 18px 16px; }
+    .q-text{ font-size: 16px; }
+    .opt .txt{ font-size: 15px; }
+    .nav{ flex-wrap: wrap; }
+    .btn{ flex: 1; padding: 14px 20px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<main class="wrap">
+  <header class="head">
+    <h1>Семейная ипотека Альфа-Банк<br>новые правила с 01.10.2026</h1>
+    <p class="q-counter">Вопрос <span id="qCounter">1</span> из <span id="qTotal">8</span></p>
+  </header>
+
+  <div id="slide" class="slide"></div>
+
+  <div class="nav" id="nav">
+    <button type="button" class="btn ghost" id="backBtn" disabled>← Назад</button>
+    <button type="button" class="btn" id="nextBtn" disabled>Далее →</button>
+  </div>
+</main>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ==================== Данные теста (обновлено под 01.10.2026) ==================== */
+  const QUESTIONS = [
+    {
+      q: "Какой возраст должен быть у одного из детей в семье для получения льготной ставки?",
+      options: ["Не старше 5 лет", "Не старше 7 лет", "Не старше 10 лет", "Не старше 12 лет"],
+      correct: 1
+    },
+    {
+      q: "Какой возраст указан для ребёнка-инвалида в условиях программы?",
+      options: ["До 7 лет", "До 14 лет", "До 18 лет", "До 21 года"],
+      correct: 2
+    },
+    {
+      q: "Какое требование отменено для регистрации заёмщика?",
+      options: [
+        "Регистрация по месту работы",
+        "Регистрация по месту жительства",
+        "Регистрация целевого участника вместе с ребёнком",
+        "Регистрация по месту учёбы"
+      ],
+      correct: 2
+    },
+    {
+      q: "Какую регистрацию необходимо оформить по адресу ипотечного объекта?",
+      options: [
+        "Временную регистрацию",
+        "Постоянную регистрацию",
+        "Регистрацию только ребёнка",
+        "Регистрация не требуется"
+      ],
+      correct: 1
+    },
+    {
+      q: "Каков максимальный срок предоставления льготной ставки (субсидирования) с 01.10.2026?",
+      options: ["5 лет", "10 лет", "15 лет", "20 лет"],
+      correct: 2
+    },
+    {
+      q: "В каком случае может применяться первоначальный взнос в размере 50%?",
+      options: [
+        "Если в семье нет детей",
+        "Если в семье не более двух детей",
+        "Только при наличии ребёнка-инвалида",
+        "Только при наличии трёх и более детей"
+      ],
+      correct: 1
+    },
+    {
+      q: "Какое условие указано для семьи с двумя детьми?",
+      options: [
+        "Оба ребёнка должны быть младше 7 лет",
+        "Одному из детей должно быть не больше 7 лет",
+        "Один ребёнок должен быть старше 18 лет",
+        "Дети должны быть близнецами"
+      ],
+      correct: 1
+    },
+    {
+      q: "Какое утверждение является верным?",
+      options: [
+        "Максимальный срок льготной ставки составляет 15 лет, а требование о регистрации вместе с ребёнком отменено",
+        "Льготная ставка предоставляется максимум на 5 лет, а регистрация вместе с ребёнком обязательна",
+        "Максимальный срок кредита составляет 30 лет",
+        "Постоянная регистрация по адресу ипотечного объекта не требуется"
+      ],
+      correct: 0
+    }
+  ];
+
+  const LETTERS = ["А", "Б", "В", "Г"];
+  const TOTAL   = QUESTIONS.length;
+  const CIRC    = 2 * Math.PI * 52;
+
+  const slide        = document.getElementById("slide");
+  const qCounter     = document.getElementById("qCounter");
+  const qTotal       = document.getElementById("qTotal");
+  const backBtn      = document.getElementById("backBtn");
+  const nextBtn      = document.getElementById("nextBtn");
+  const nav          = document.getElementById("nav");
+  const progressFill = document.getElementById("progressFill");
+
+  let current   = 0;
+  let answers   = Array(TOTAL).fill(null);
+  let animating = false;
+  let finished  = false;
+
+  qTotal.textContent = TOTAL;
+
+  function renderQuestion(index) {
+    const item = QUESTIONS[index];
+
+    let html =
+      '<div class="q-card">' +
+        '<div class="q-head">' +
+          '<span class="q-num">' + (index + 1) + '</span>' +
+          '<p class="q-text">' + item.q + '</p>' +
+        '</div>' +
+        '<div class="options">';
+
+    item.options.forEach(function (text, oi) {
+      const selected = answers[index] === oi ? " selected" : "";
+      html +=
+        '<label class="opt' + selected + '">' +
+          '<input type="radio" name="q' + index + '" value="' + oi + '"' +
+            (answers[index] === oi ? " checked" : "") + '>' +
+          '<span class="letter">' + LETTERS[oi] + '</span>' +
+          '<span class="txt">' + text + '</span>' +
+        '</label>';
+    });
+
+    html += '</div></div>';
+    slide.innerHTML = html;
+
+    slide.querySelectorAll('input[type=radio]').forEach(function (input) {
+      input.addEventListener("change", function () {
+        answers[index] = Number(input.value);
+        slide.querySelectorAll(".opt").forEach(function (opt) {
+          opt.classList.toggle("selected", opt.contains(input));
+        });
+        updateUI();
+      });
+    });
+
+    qCounter.textContent = index + 1;
+    updateUI();
+  }
+
+  function updateUI() {
+    const answered = answers.filter(function (a) { return a !== null; }).length;
+    progressFill.style.width = (answered / TOTAL * 100) + "%";
+
+    backBtn.disabled = current === 0 || finished;
+    nextBtn.disabled = answers[current] === null || finished;
+    nextBtn.textContent = current === TOTAL - 1 ? "Завершить" : "Далее →";
+  }
+
+  function transitionTo(renderFn, dir) {
+    if (animating) return;
+    animating = true;
+
+    const offset = dir > 0 ? 40 : -40;
+
+    const out = slide.animate([
+      { opacity: 1, transform: "translateX(0)" },
+      { opacity: 0, transform: "translateX(" + (-offset) + "px)" }
+    ], {
+      duration: 200,
+      easing: "cubic-bezier(.4,0,.2,1)",
+      fill: "forwards"
+    });
+
+    out.onfinish = function () {
+      renderFn();
+
+      slide.style.opacity = "0";
+      slide.style.transform = "translateX(" + offset + "px)";
+      out.cancel();
+
+      const inn = slide.animate([
+        { opacity: 0, transform: "translateX(" + offset + "px)" },
+        { opacity: 1, transform: "translateX(0)" }
+      ], {
+        duration: 320,
+        easing: "cubic-bezier(.22,.9,.3,1)",
+        fill: "forwards"
+      });
+
+      inn.onfinish = function () {
+        slide.style.opacity = "";
+        slide.style.transform = "";
+        inn.cancel();
+        animating = false;
+      };
+    };
+  }
+
+  function goTo(index, dir) {
+    if (finished || animating) return;
+    if (index < 0 || index >= TOTAL) return;
+
+    transitionTo(function () {
+      current = index;
+      renderQuestion(current);
+    }, dir);
+  }
+
+  function computeStats() {
+    let correct = 0, wrong = 0;
+    answers.forEach(function (a, i) {
+      if (a === null) return;
+      if (a === QUESTIONS[i].correct) correct++;
+      else wrong++;
+    });
+    const skipped = answers.filter(function (a) { return a === null; }).length;
+    const percent = Math.round(correct / TOTAL * 100);
+    return { correct: correct, wrong: wrong, skipped: skipped, percent: percent };
+  }
+
+  function showResults() {
+    if (finished || animating) return;
+    finished = true;
+
+    const s = computeStats();
+
+    transitionTo(function () {
+      nav.style.display = "none";
+      progressFill.style.width = "100%";
+      renderResults(s.correct, s.wrong, s.skipped, s.percent);
+
+      setTimeout(function () {
+        const ring = slide.querySelector(".ring-fg");
+        if (ring) {
+          ring.style.strokeDashoffset = CIRC;
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              ring.style.strokeDashoffset = CIRC * (1 - s.percent / 100);
+            });
+          });
+        }
+        animateCount(slide.querySelector("#pctNum"), s.percent, 1400);
+        slide.querySelectorAll(".stat-num").forEach(function (el) {
+          animateCount(el, Number(el.dataset.target), 1000);
+        });
+      }, 40);
+    }, 1);
+  }
+
+  function renderResults(correct, wrong, skipped, percent) {
+    let verdict, verdictClass;
+    if (percent === 100)      { verdict = "Идеально! Все ответы верны 🎉";       verdictClass = "good"; }
+    else if (percent >= 75)   { verdict = "Отличный результат — почти всё верно 👍"; verdictClass = "good"; }
+    else if (percent >= 50)   { verdict = "Неплохо, но часть условий стоит повторить."; verdictClass = "mid"; }
+    else                      { verdict = "Стоит внимательнее изучить условия программы."; verdictClass = "low"; }
+
+    slide.innerHTML =
+      '<div class="results">' +
+        '<svg width="0" height="0" style="position:absolute">' +
+          '<defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">' +
+            '<stop offset="0%" stop-color="#6366f1"/>' +
+            '<stop offset="60%" stop-color="#a855f7"/>' +
+            '<stop offset="100%" stop-color="#ec4899"/>' +
+          '</linearGradient></defs>' +
+        '</svg>' +
+
+        '<div class="res-top">' +
+          '<div class="ring-wrap">' +
+            '<svg class="ring" viewBox="0 0 120 120">' +
+              '<circle class="ring-bg" cx="60" cy="60" r="52"></circle>' +
+              '<circle class="ring-fg" cx="60" cy="60" r="52"></circle>' +
+            '</svg>' +
+            '<div class="ring-label"><span id="pctNum">0</span>%</div>' +
+          '</div>' +
+          '<div class="res-text">' +
+            '<h2>Результат теста</h2>' +
+            '<p class="verdict ' + verdictClass + '">' + verdict + '</p>' +
+            '<p class="sub">Правильных ответов: <b>' + correct + '</b> из ' + TOTAL + '</p>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="stats">' +
+          '<div class="stat ok">' +
+            '<span class="stat-num" data-target="' + correct + '">0</span>' +
+            '<span class="stat-label">Верно</span>' +
+          '</div>' +
+          '<div class="stat bad">' +
+            '<span class="stat-num" data-target="' + wrong + '">0</span>' +
+            '<span class="stat-label">Неверно</span>' +
+          '</div>' +
+          '<div class="stat skip">' +
+            '<span class="stat-num" data-target="' + skipped + '">0</span>' +
+            '<span class="stat-label">Без ответа</span>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="reset-wrap">' +
+          '<button type="button" class="btn" id="resetBtn">Пройти заново</button>' +
+        '</div>' +
+      '</div>';
+
+    slide.querySelector("#resetBtn").addEventListener("click", reset);
+  }
+
+  function animateCount(el, target, duration) {
+    if (!el) return;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function reset() {
+    if (animating) return;
+
+    transitionTo(function () {
+      finished = false;
+      current  = 0;
+      answers  = Array(TOTAL).fill(null);
+      nav.style.display = "";
+      progressFill.style.width = "0%";
+      renderQuestion(0);
+    }, -1);
+  }
+
+  backBtn.addEventListener("click", function () {
+    if (current > 0) goTo(current - 1, -1);
+  });
+
+  nextBtn.addEventListener("click", function () {
+    if (answers[current] === null) return;
+    if (current === TOTAL - 1) showResults();
+    else goTo(current + 1, 1);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (finished || animating) return;
+
+    if (/^[1-9]$/.test(e.key)) {
+      const idx = Number(e.key) - 1;
+      const inputs = slide.querySelectorAll('input[type=radio]');
+      if (inputs[idx]) {
+        inputs[idx].checked = true;
+        inputs[idx].dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
+
+    if (e.key === "ArrowLeft" && current > 0) backBtn.click();
+    if (e.key === "ArrowRight" && !nextBtn.disabled) nextBtn.click();
+  });
+
+  renderQuestion(0);
+})();
+</script>
+</body>
+</html>
